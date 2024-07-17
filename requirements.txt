@@ -1,5 +1,5 @@
-Flask==2.2.2  # A more recent version, check Flask's documentation for the latest stable release
+Flask==2.0.1
+Werkzeug==2.3.7  # This version is stable and compatible with Flask 2.0.1
 Flask-CORS==3.0.10
 requests==2.26.0
 gunicorn==20.1.0
-Werkzeug==2.0.1  # Updated to a compatible version with the newer Flask
