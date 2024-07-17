@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Model Benchmarking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Roboto+Mono&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Model Benchmarking</h1>
+            <button id="modeToggle" aria-label="Toggle dark/light mode">🌓</button>
+        </header>
+        <main class="content">
+            <div class="model-column" id="gpt4-column">
+                <div class="model-header">
+                    <h2 class="model-title">GPT-4</h2>
+                    <div class="api-key-input">
+                        <label for="gpt4-api-key">API Key:</label>
+                        <input type="password" id="gpt4-api-key" placeholder="Enter OpenAI API Key">
+                    </div>
+                    <div class="kpi-grid">
+                        <div class="kpi-item">
+                            <div class="kpi-label">Avg. Response Time</div>
+                            <div class="kpi-value" id="gpt4-response-time">0ms</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-label">Tokens/Second</div>
+                            <div class="kpi-value" id="gpt4-tokens-per-second">0</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-label">Total Tokens</div>
+                            <div class="kpi-value" id="gpt4-total-tokens">0</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-label">Estimated Cost</div>
+                            <div class="kpi-value" id="gpt4-cost">$0.0000</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-container"></div>
+            </div>
+            <div class="model-column" id="claude-column">
+                <div class="model-header">
+                    <h2 class="model-title">Claude 3.5 Sonnet</h2>
+                    <div class="api-key-input">
+                        <label for="claude-api-key">API Key:</label>
+                        <input type="password" id="claude-api-key" placeholder="Enter Anthropic API Key">
+                    </div>
+                    <div class="kpi-grid">
+                        <div class="kpi-item">
+                            <div class="kpi-label">Avg. Response Time</div>
+                            <div class="kpi-value" id="claude-response-time">0ms</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-label">Tokens/Second</div>
+                            <div class="kpi-value" id="claude-tokens-per-second">0</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-label">Total Tokens</div>
+                            <div class="kpi-value" id="claude-total-tokens">0</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-label">Estimated Cost</div>
+                            <div class="kpi-value" id="claude-cost">$0.0000</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-container"></div>
+            </div>
+        </main>
+        <div class="input-area">
+            <div class="model-toggle">
+                <label for="gpt4-toggle"><input type="checkbox" id="gpt4-toggle" checked> GPT-4</label>
+                <label for="claude-toggle"><input type="checkbox" id="claude-toggle" checked> Claude 3.5 Sonnet</label>
+            </div>
+            <div class="prompt-container">
+                <input type="text" id="prompt" placeholder="Enter your prompt here...">
+                <button class="attach-button" aria-label="Attach file">📎</button>
+                <button class="send-button" aria-label="Send prompt">➤</button>
+            </div>
+        </div>
+        <footer>
+            <p class="disclaimer">Use AI at your own discretion. Results may vary and should not be relied upon for
+                critical decisions.</p>
+            <p class="privacy-note">API keys are securely handled by our backend server and are not stored.</p>
+            <p class="credits">Made with ❤️ in Bellevue</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
