@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const modelData = {
-    gpt4: { responseTimes: [], totalTokens: 0, cost: 0 },
-    claude: { responseTimes: [], totalTokens: 0, cost: 0 }
+    gpt4: { responseTimes: [], totalTokens: 0, cost: 0, history: [] },
+    claude: { responseTimes: [], totalTokens: 0, cost: 0, history: [] }
   };
 
   function initializeApiKeys() {
@@ -75,7 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const response = await fetch('/api/ProxyAIRequests', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model, api_key: apiKey, text: prompt })
+      body: JSON.stringify({ 
+        model, 
+        api_key: apiKey, 
+        text: prompt,
+        history: modelData[model].history
+      })
     });
 
     if (!response.ok) {
@@ -101,6 +106,10 @@ document.addEventListener('DOMContentLoaded', () => {
       loadingMessage.remove();
       addMessage(column, response.content, true, model);
 
+      // Update conversation history
+      modelData[model].history.push({ role: 'user', content: prompt });
+      modelData[model].history.push({ role: 'assistant', content: response.content });
+
       updateKPIs(model, responseTime, tokens);
     } catch (error) {
       loadingMessage.remove();
@@ -123,12 +132,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const prompt = elements.promptInput.value.trim();
     if (!prompt) return;
 
+    const promises = [];
+
     if (elements.gpt4Toggle.checked) {
-      await generateResponse('gpt4', prompt);
+      promises.push(generateResponse('gpt4', prompt));
     }
     if (elements.claudeToggle.checked) {
-      await generateResponse('claude', prompt);
+      promises.push(generateResponse('claude', prompt));
     }
+
+    await Promise.all(promises);
 
     elements.promptInput.value = '';
   }

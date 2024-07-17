@@ -6,16 +6,18 @@ import os
 app = Flask(__name__, static_folder='static')
 CORS(app)
 
-def call_claude_sonnet(api_key, input_text):
+def call_claude_sonnet(api_key, input_text, history):
     url = "https://api.anthropic.com/v1/messages"
     headers = {
         "x-api-key": api_key,
         "Content-Type": "application/json",
         "anthropic-version": "2023-06-01"
     }
+    messages = [{"role": msg["role"], "content": msg["content"]} for msg in history]
+    messages.append({"role": "user", "content": input_text})
     payload = {
         "model": "claude-3-sonnet-20240229",
-        "messages": [{"role": "user", "content": input_text}],
+        "messages": messages,
         "max_tokens": 150
     }
     response = requests.post(url, headers=headers, json=payload)
@@ -28,15 +30,17 @@ def call_claude_sonnet(api_key, input_text):
         }
     }
 
-def call_gpt4(api_key, input_text):
+def call_gpt4(api_key, input_text, history):
     url = "https://api.openai.com/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
+    messages = [{"role": msg["role"], "content": msg["content"]} for msg in history]
+    messages.append({"role": "user", "content": input_text})
     payload = {
         "model": "gpt-4",
-        "messages": [{"role": "user", "content": input_text}],
+        "messages": messages,
         "max_tokens": 150
     }
     response = requests.post(url, headers=headers, json=payload)
@@ -53,15 +57,16 @@ def proxy_ai_requests():
     model = data.get('model')
     api_key = data.get('api_key')
     input_text = data.get('text')
+    history = data.get('history', [])
 
     if not all([model, api_key, input_text]):
         return jsonify({"error": "Missing parameters"}), 400
 
     try:
         if model == 'claude':
-            result = call_claude_sonnet(api_key, input_text)
+            result = call_claude_sonnet(api_key, input_text, history)
         elif model == 'gpt4':
-            result = call_gpt4(api_key, input_text)
+            result = call_gpt4(api_key, input_text, history)
         else:
             return jsonify({"error": "Invalid model"}), 400
 
