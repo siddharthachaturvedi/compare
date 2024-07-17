@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     messageDiv.textContent = content;
     column.querySelector('.chat-container').appendChild(messageDiv);
     column.querySelector('.chat-container').scrollTop = column.querySelector('.chat-container').scrollHeight;
+    return messageDiv;
   }
 
   function updateKPIs(model, responseTime, tokens) {
