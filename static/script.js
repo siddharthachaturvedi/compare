@@ -43,10 +43,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function formatAIResponse(text) {
+    const paragraphs = text.split('\n\n');
+    
+    const formattedParagraphs = paragraphs.map(paragraph => {
+      if (paragraph.match(/^\d+\./m) || paragraph.match(/^-/m)) {
+        const listItems = paragraph.split('\n');
+        const listType = paragraph.match(/^\d+\./) ? 'ol' : 'ul';
+        return `<${listType}>${listItems.map(item => `<li>${item.replace(/^\d+\.\s|-\s/, '')}</li>`).join('')}</${listType}>`;
+      }
+      return `<p>${paragraph}</p>`;
+    });
+
+    return formattedParagraphs.join('');
+  }
+
   function addMessage(column, content, isAI = true, model = '') {
     const messageDiv = document.createElement('div');
     messageDiv.className = isAI ? `message ${model}-message` : 'message user-message';
-    messageDiv.textContent = content;
+    messageDiv.innerHTML = isAI ? formatAIResponse(content) : content;
     column.querySelector('.chat-container').appendChild(messageDiv);
     column.querySelector('.chat-container').scrollTop = column.querySelector('.chat-container').scrollHeight;
     return messageDiv;
@@ -106,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
       loadingMessage.remove();
       addMessage(column, response.content, true, model);
 
-      // Update conversation history
       modelData[model].history.push({ role: 'user', content: prompt });
       modelData[model].history.push({ role: 'assistant', content: response.content });
 
