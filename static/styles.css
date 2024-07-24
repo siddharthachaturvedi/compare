@@ -134,42 +134,55 @@ h1 {
 }
 
 .message {
-  margin-bottom: 0.75rem;
-  padding: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
   border-radius: 0.5rem;
-  max-width: 80%;
-  line-height: 1.5;
+  max-width: 85%;
+  line-height: 1.6;
   white-space: pre-wrap;
   word-wrap: break-word;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .message p {
+  margin-top: 0;
   margin-bottom: 0.75rem;
+}
+
+.message p:last-child {
+  margin-bottom: 0;
 }
 
 .message ul, .message ol {
-  margin-left: 1.5rem;
-  margin-bottom: 0.75rem;
+  margin: 0.5rem 0 0.75rem 1.5rem;
+  padding-left: 0;
 }
 
 .message li {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
+}
+
+.message li:last-child {
+  margin-bottom: 0;
 }
 
 .gpt4-message {
   background-color: var(--gpt4-bg);
   align-self: flex-start;
+  border-bottom-left-radius: 0;
 }
 
 .claude-message {
   background-color: var(--claude-bg);
   align-self: flex-start;
+  border-bottom-left-radius: 0;
 }
 
 .user-message {
   background-color: var(--user-bg);
   align-self: flex-end;
   margin-left: auto;
+  border-bottom-right-radius: 0;
 }
 
 .input-area {
@@ -333,5 +346,8 @@ footer p {
 
   .kpi-grid {
     grid-template-columns: 1fr;
+  }
+  .message {
+    max-width: 90%;
   }
 }

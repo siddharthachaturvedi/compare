@@ -47,23 +47,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const paragraphs = text.split('\n\n');
     
     const formattedParagraphs = paragraphs.map(paragraph => {
-      if (paragraph.match(/^\d+\./m) || paragraph.match(/^-/m)) {
+      // Improved regex to match both numbered lists and bullet points more accurately
+      const listMatch = paragraph.match(/^(\d+\.|-)\s/m);
+      if (listMatch) {
         const listItems = paragraph.split('\n');
-        const listType = paragraph.match(/^\d+\./) ? 'ol' : 'ul';
-        return `<${listType}>${listItems.map(item => `<li>${item.replace(/^\d+\.\s|-\s/, '')}</li>`).join('')}</${listType}>`;
+        const listType = listMatch[1] === '-' ? 'ul' : 'ol';
+        return `<${listType}>${listItems.map(item => `<li>${item.replace(/^(\d+\.|-)\s/, '')}</li>`).join('')}</${listType}>`;
       }
       return `<p>${paragraph}</p>`;
     });
-
+  
     return formattedParagraphs.join('');
   }
-
+  
   function addMessage(column, content, isAI = true, model = '') {
     const messageDiv = document.createElement('div');
     messageDiv.className = isAI ? `message ${model}-message` : 'message user-message';
     messageDiv.innerHTML = isAI ? formatAIResponse(content) : content;
-    column.querySelector('.chat-container').appendChild(messageDiv);
-    column.querySelector('.chat-container').scrollTop = column.querySelector('.chat-container').scrollHeight;
+    const chatContainer = column.querySelector('.chat-container');
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
     return messageDiv;
   }
 
