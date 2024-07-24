@@ -18,7 +18,7 @@ def call_claude_sonnet(api_key, input_text, history):
     payload = {
         "model": "claude-3-sonnet-20240229",
         "messages": messages,
-        "max_tokens": 150
+        "max_tokens": 1500
     }
     response = requests.post(url, headers=headers, json=payload)
     response.raise_for_status()
@@ -41,7 +41,7 @@ def call_gpt4(api_key, input_text, history):
     payload = {
         "model": "gpt-4",
         "messages": messages,
-        "max_tokens": 150
+        "max_tokens": 1500
     }
     response = requests.post(url, headers=headers, json=payload)
     response.raise_for_status()
@@ -85,4 +85,3 @@ def serve(path):
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)
 
-# Make sure to replace the API keys with your own

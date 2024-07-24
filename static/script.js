@@ -45,20 +45,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function formatAIResponse(text) {
     const paragraphs = text.split('\n\n');
-    
+  
     const formattedParagraphs = paragraphs.map(paragraph => {
-      // Improved regex to match both numbered lists and bullet points more accurately
-      const listMatch = paragraph.match(/^(\d+\.|-)\s/m);
-      if (listMatch) {
-        const listItems = paragraph.split('\n');
-        const listType = listMatch[1] === '-' ? 'ul' : 'ol';
-        return `<${listType}>${listItems.map(item => `<li>${item.replace(/^(\d+\.|-)\s/, '')}</li>`).join('')}</${listType}>`;
+      // Handle blockquotes
+      if (paragraph.startsWith('> ')) {
+        const quoteLines = paragraph.split('\n').map(line => line.replace(/^>\s?/, ''));
+        return `<blockquote>${quoteLines.join('<br>')}</blockquote>`;
       }
+  
+      // Handle code blocks
+      if (paragraph.startsWith('```') && paragraph.endsWith('```')) {
+        const codeContent = paragraph.slice(3, -3).trim();
+        return `<pre><code>${codeContent}</code></pre>`;
+      }
+  
+      // Improved regex to match both numbered lists and bullet points more accurately
+      const listMatch = paragraph.match(/^(\d+\.\s|-)\s/m);
+      if (listMatch) {
+        const listItems = paragraph.split('\n').map(item => item.trim()).filter(item => item !== '');
+        const listType = listMatch[1].includes('-') ? 'ul' : 'ol';
+        const nestedList = (item) => {
+          const nestedMatch = item.match(/^(\d+\.\s|-)\s/);
+          if (nestedMatch) {
+            const nestedItems = item.split('\n').map(nestedItem => nestedItem.trim()).filter(nestedItem => nestedItem !== '');
+            const nestedListType = nestedMatch[1].includes('-') ? 'ul' : 'ol';
+            return `<${nestedListType}>${nestedItems.map(nestedItem => `<li>${nestedItem.replace(/^(\d+\.\s|-)\s/, '')}</li>`).join('')}</${nestedListType}>`;
+          }
+          return `<li>${item.replace(/^(\d+\.\s|-)\s/, '')}</li>`;
+        };
+        return `<${listType}>${listItems.map(nestedList).join('')}</${listType}>`;
+      }
+  
+      // Handle bold and italic text
+      paragraph = paragraph.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold
+      paragraph = paragraph.replace(/\*(.*?)\*/g, '<em>$1</em>'); // Italic
+  
       return `<p>${paragraph}</p>`;
     });
   
     return formattedParagraphs.join('');
   }
+  
   
   function addMessage(column, content, isAI = true, model = '') {
     const messageDiv = document.createElement('div');
